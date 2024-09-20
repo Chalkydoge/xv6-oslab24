@@ -1,3 +1,4 @@
-# XV6-OSLAB24-HITSZ
+# XV6-OSLAB24-fdu
 
-2024年 HITSZ的xv6 OS实验
+FDU-OS based on  2024年 HITSZ的xv6 OS实验
+本课程实验设计参考哈尔滨工业大学（深圳）《操作系统》课程实验 (链接到外部网站。)，感谢夏文老师和其他老师同学们为实验课设计做出的贡献
