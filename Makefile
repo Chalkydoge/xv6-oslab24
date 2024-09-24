@@ -277,7 +277,7 @@ format:
 ##
 
 diff:
-	git diff util HEAD > commit.patch
+	git diff origin/util HEAD > commit.patch
 
 WEBSUB := https://6828.scripts.mit.edu/2020/handin.py
 
