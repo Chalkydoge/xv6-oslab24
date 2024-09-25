@@ -251,7 +251,7 @@ GDBARGS += -ex 'set riscv use-compressed-breakpoints yes'
 
 
 gdb: 
-	$(GDB) $(GDBARGS)
+	$(GDB)
 
 ##
 ##  FOR testing lab grading script
@@ -274,7 +274,7 @@ format:
 	python3 clang-format.py
 
 diff:
-	git diff syscall-base HEAD > commit.patch
+	git diff origin/syscall HEAD > commit.patch
 
 ##
 ## FOR web handin
