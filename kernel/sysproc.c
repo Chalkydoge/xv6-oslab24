@@ -7,6 +7,10 @@
 #include "spinlock.h"
 #include "proc.h"
 
+
+// 全局变量，存储 trace 掩码
+int trace_mask = 0;
+
 uint64 sys_exit(void) {
   int n;
   if (argint(0, &n) < 0) return -1;
@@ -79,5 +83,14 @@ uint64 sys_rename(void) {
   struct proc *p = myproc();
   memmove(p->name, name, len);
   p->name[len] = '\0';
+  return 0;
+}
+
+uint64 sys_trace(void)
+{
+  int mask;
+  if(argint(0, &mask) < 0)
+    return -1;
+  trace_mask = mask;  // 设置全局的 trace 掩码
   return 0;
 }
