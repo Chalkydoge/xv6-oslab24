@@ -92,6 +92,7 @@ extern uint64 sys_write(void);
 extern uint64 sys_uptime(void);
 extern uint64 sys_rename(void);
 extern uint64 sys_trace(void);
+extern uint64 sys_sysinfo(void);
 
 static uint64 (*syscalls[])(void) = {
     [SYS_fork] sys_fork,   [SYS_exit] sys_exit,     [SYS_wait] sys_wait,     [SYS_pipe] sys_pipe,
@@ -99,7 +100,7 @@ static uint64 (*syscalls[])(void) = {
     [SYS_chdir] sys_chdir, [SYS_dup] sys_dup,       [SYS_getpid] sys_getpid, [SYS_sbrk] sys_sbrk,
     [SYS_sleep] sys_sleep, [SYS_uptime] sys_uptime, [SYS_open] sys_open,     [SYS_write] sys_write,
     [SYS_mknod] sys_mknod, [SYS_unlink] sys_unlink, [SYS_link] sys_link,     [SYS_mkdir] sys_mkdir,
-    [SYS_close] sys_close, [SYS_rename] sys_rename, [SYS_trace] sys_trace,
+    [SYS_close] sys_close, [SYS_rename] sys_rename, [SYS_trace] sys_trace,   [SYS_sysinfo] sys_sysinfo,
 };
 
 char *syscallnames[] = {
@@ -126,6 +127,7 @@ char *syscallnames[] = {
   [SYS_close]   "close",
   [SYS_rename]  "rename",
   [SYS_trace]   "trace",
+  [SYS_sysinfo] "sysinfo",
 };
 
 void syscall(void) {
@@ -137,7 +139,7 @@ void syscall(void) {
     int syscall_ret = syscalls[num]();
     // 如果 trace_mask 的相应位被设置，打印系统调用信息
     if(trace_mask & (1 << num)) {
-      printf("%d: sys_%s() -> %d\n", p->pid, syscallnames[num], syscall_ret);
+      printf("%d: sys_%s(%d) -> %d\n", p->pid, syscallnames[num], p->trapframe->a0, syscall_ret);
     }
     p->trapframe->a0 = syscall_ret;
   } else {

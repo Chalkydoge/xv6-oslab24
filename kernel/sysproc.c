@@ -6,7 +6,7 @@
 #include "memlayout.h"
 #include "spinlock.h"
 #include "proc.h"
-
+#include "sysinfo.h"
 
 // 全局变量，存储 trace 掩码
 int trace_mask = 0;
@@ -93,4 +93,26 @@ uint64 sys_trace(void)
     return -1;
   trace_mask = mask;  // 设置全局的 trace 掩码
   return 0;
+}
+
+// 系统调用函数
+uint64
+sys_sysinfo(void)
+{
+    struct sysinfo info;
+    struct proc *p = myproc();
+    uint64 addr;  // 用户空间地址
+
+    if (argaddr(0, &addr) < 0)  // 获取用户传入的参数
+        return -1;
+
+    // 获取空闲内存量
+    info.freemem = kfreemem();  // 需要自己实现kfreemem获取内存
+    info.nproc = get_unused_procs();  // 获取UNUSED状态的进程数，需要实现该函数
+
+    // 将结构体信息复制到用户空间
+    if (copyout(p->pagetable, addr, (char *)&info, sizeof(info)) < 0)
+        return -1;
+
+    return 0;
 }
