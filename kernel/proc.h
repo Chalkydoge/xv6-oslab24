@@ -103,4 +103,19 @@ struct proc {
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
+  
+  // Newly added for Lab3
+  uint64 created_time;         // creation time
+  uint64 finish_time;          // finish time
+  uint64 running_time;         // running time
+  uint64 runable_time;         // runnable time
+  uint64 sleep_time;           // sleeping time
+  uint64 start;                // start time of a process state
+  uint64 end;                  // end time of a process state
+
+  int priority;                // Process priority, within [0,1,2,3], 0 is the highest and 3 is the lowest
 };
+
+// TODO: using RR for Round-Robin, using PR for Priority-Scheduling
+#define RR
+// #define PR

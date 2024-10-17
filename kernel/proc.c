@@ -21,6 +21,9 @@ static void freeproc(struct proc *p);
 
 extern char trampoline[];  // trampoline.S
 
+// function interface
+int on_state_change(int cur_state, int nxt_state, struct proc *p);
+
 // initialize the proc table at boot time.
 void procinit(void) {
   struct proc *p;
@@ -96,6 +99,12 @@ static struct proc *allocproc(void) {
 
 found:
   p->pid = allocpid();
+  
+  // TODO: add A LOT OF init here
+
+  #ifdef PR
+  p->priority = 2;
+  #endif
 
   // Allocate a trapframe page.
   if ((p->trapframe = (struct trapframe *)kalloc()) == 0) {
@@ -200,6 +209,7 @@ void userinit(void) {
   safestrcpy(p->name, "initcode", sizeof(p->name));
   p->cwd = namei("/");
 
+  // TODO: on state change
   p->state = RUNNABLE;
 
   release(&p->lock);
@@ -260,6 +270,7 @@ int fork(void) {
 
   pid = np->pid;
 
+  // TODO: on state change
   np->state = RUNNABLE;
 
   release(&np->lock);
@@ -344,6 +355,8 @@ void exit(int status) {
   // Parent might be sleeping in wait().
   wakeup1(original_parent);
 
+  // TODO: on state change
+
   p->xstate = status;
   p->state = ZOMBIE;
 
@@ -422,9 +435,15 @@ void scheduler(void) {
     intr_on();
 
     int found = 0;
+    
+    // Note here that we have two different scheduling algorithms
+    #if defined RR
     for (p = proc; p < &proc[NPROC]; p++) {
       acquire(&p->lock);
       if (p->state == RUNNABLE) {
+        // TODO: on state change
+        on_state_change(p->state, RUNNING, p);
+
         // Switch to chosen process.  It is the process's job
         // to release its lock and then reacquire it
         // before jumping back to us.
@@ -440,6 +459,16 @@ void scheduler(void) {
       }
       release(&p->lock);
     }
+    #elif defined PR
+    // Priority scheduling, iterating over max_p to find process with highest priority
+
+    // First find the process with the highest priority and is RUNNABLE
+    
+    
+    // If found such max_p, copy to p, and run it.
+    
+    #endif
+    // The same as Round-Robin, if no RUNNABLE process is found, we will wait for interrupt
     if (found == 0) {
       intr_on();
       asm volatile("wfi");
@@ -472,6 +501,9 @@ void sched(void) {
 void yield(void) {
   struct proc *p = myproc();
   acquire(&p->lock);
+
+  // TODO: on state change
+  
   p->state = RUNNABLE;
   sched();
   release(&p->lock);
@@ -512,6 +544,8 @@ void sleep(void *chan, struct spinlock *lk) {
     release(lk);
   }
 
+  // TODO: on state change
+
   // Go to sleep.
   p->chan = chan;
   p->state = SLEEPING;
@@ -536,6 +570,8 @@ void wakeup(void *chan) {
   for (p = proc; p < &proc[NPROC]; p++) {
     acquire(&p->lock);
     if (p->state == SLEEPING && p->chan == chan) {
+      // TODO: on state change
+
       p->state = RUNNABLE;
     }
     release(&p->lock);
@@ -562,6 +598,8 @@ int kill(int pid) {
     if (p->pid == pid) {
       p->killed = 1;
       if (p->state == SLEEPING) {
+        // TODO: on state change
+
         // Wake process from sleep().
         p->state = RUNNABLE;
       }
@@ -631,4 +669,20 @@ uint64 get_unused_procs(void) {
         }
     }
     return count;
+}
+
+// get the running time, sleeping time, runnable time when the child process returns 
+int wait_sched(int *runable_time, int *running_time, int *sleep_time) {
+
+}
+
+// UNUSED, SLEEPING, RUNNABLE, RUNNING, ZOMBIE
+int on_state_change(int cur_state, int nxt_state, struct proc *p) {
+    
+}
+
+// set priority [0-3] to a given process [pid]
+// -1 means error, 0 means success
+int set_priority(int priority, int pid) {
+    
 }

@@ -27,6 +27,9 @@ int uptime(void);
 int rename(const char*);
 int trace(int);
 int sysinfo(struct sysinfo *);
+// TODO: add your syscall names (for user-level programs) here.
+int wait_sched(int *wtime, int *rtime, int *stime);
+int set_priority(int, int);
 
 // ulib.c
 int stat(const char*, struct stat*);

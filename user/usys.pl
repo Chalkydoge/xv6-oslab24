@@ -39,3 +39,5 @@ entry("uptime");
 entry("rename");
 entry("trace");
 entry("sysinfo");
+entry("wait_sched");
+entry("set_priority");

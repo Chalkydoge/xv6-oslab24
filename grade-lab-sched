@@ -1,0 +1,11 @@
+#!/usr/bin/env python
+
+from gradelib import *
+
+r = Runner(save("xv6.out"))
+
+@test(100, "time")
+def test_time():
+    check_time()
+
+run_tests()

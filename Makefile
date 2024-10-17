@@ -166,6 +166,8 @@ UPROGS=\
 	$U/_exittest\
 	$U/_trace\
 	$U/_sysinfotest\
+	$U/_stat \
+	$U/_priostat \
 
 ifeq ($(LAB),trap)
 UPROGS += \

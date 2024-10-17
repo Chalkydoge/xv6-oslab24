@@ -86,8 +86,7 @@ uint64 sys_rename(void) {
   return 0;
 }
 
-uint64 sys_trace(void)
-{
+uint64 sys_trace(void) {
   int mask;
   if(argint(0, &mask) < 0)
     return -1;
@@ -96,9 +95,7 @@ uint64 sys_trace(void)
 }
 
 // 系统调用函数
-uint64
-sys_sysinfo(void)
-{
+uint64 sys_sysinfo(void) {
     struct sysinfo info;
     struct proc *p = myproc();
     uint64 addr;  // 用户空间地址
@@ -115,4 +112,15 @@ sys_sysinfo(void)
         return -1;
 
     return 0;
+}
+
+// 统计进程调度信息的系统调用
+uint64 sys_wait_sched(void) {
+    
+}
+
+
+// 设置进程优先级的系统调用
+uint64 sys_set_priority(void) {
+    
 }
