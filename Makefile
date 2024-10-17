@@ -277,7 +277,7 @@ format:
 	python3 clang-format.py
 
 diff:
-	git diff origin/syscall HEAD > commit.patch
+	git diff origin/scheduler HEAD > commit.patch
 
 ##
 ## FOR web handin
