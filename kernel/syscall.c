@@ -94,7 +94,6 @@ extern uint64 sys_rename(void);
 extern uint64 sys_trace(void);
 extern uint64 sys_sysinfo(void);
 
-
 static uint64 (*syscalls[])(void) = {
     [SYS_fork] sys_fork,   [SYS_exit] sys_exit,     [SYS_wait] sys_wait,     [SYS_pipe] sys_pipe,
     [SYS_read] sys_read,   [SYS_kill] sys_kill,     [SYS_exec] sys_exec,     [SYS_fstat] sys_fstat,
